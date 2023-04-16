@@ -1,5 +1,4 @@
 import { Inter } from 'next/font/google'
-import axios from "axios";
 
 const inter = Inter({ subsets: ['latin'] })
 
