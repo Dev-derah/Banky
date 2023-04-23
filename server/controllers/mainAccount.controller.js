@@ -13,12 +13,11 @@ const createAccount = async (req, res) => {
       accountNumber = createAccountNumber(22);
     }
 
-
     const newAccount = await MainAccount.create({
       user,
       accountNumber,
       accountType,
-      accountBalance: 0.0,
+      accountBalance: 0,
       dateOpened: Date.now(),
     });
     res.status(201).json(newAccount);
@@ -35,7 +34,20 @@ const getAllAccounts = async (req, res) => {
   }
 };
 const getAccountDetails = async (req, res) => {};
-const updateAccountDetails = async (req, res) => {};
+const updateAccountDetails = async (req, res) => {
+  const { id } = req.params;
+  const { amount } = req.query;
+  const Useraccount = await MainAccount.findOneAndUpdate(
+    { user: id },
+    { $inc: { accountBalance: amount/100 } },
+    { new: true }
+  );
+  try {
+    res.status(200).json(Useraccount);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 const deleteAccountDetails = async (req, res) => {};
 
 export {

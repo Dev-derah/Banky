@@ -1,50 +1,51 @@
-  
-  const initializeTransaction = async (req, res) => {
-  const https = require("https");
-      const { email, amount } = req.query;
-      const formatAmount =amount *100;
-      console.log(email, amount);
+import { formatDate, formatTime } from "../utils/dateTime_formatter.js";
+import User from "../mongodb/models/users.js";
+import Transaction from "../mongodb/models/transactions.js";
+import MainAccount from "../mongodb/models/mainAccount.js";
+import InvestmentAccount from "../mongodb/models/investmentAccount.js";
 
-  const params = JSON.stringify({
-    email,
-    amount:formatAmount,
+const verifyTransaction = async (req, res) => {
+  const paystack = require("paystack")(process.env.PAYSTACK_SECRET_KEY);
+  const { ref } = req.params;
+
+  paystack.transaction.verify(ref, async function (error, body) {
+    if (error) {
+      return console.log(error);
+    } else {
+      const amount = body.data.amount/100;
+      const date = formatDate(body.data.paid_at);
+      const time = formatTime(body.data.paid_at);
+      const email = body.data.customer.email;
+      const user = await User.findOne({ email });
+
+      const newTransaction = new Transaction({
+        date,
+        time,
+        transactionType: "Account Funding",
+        transactionAmount: amount,
+        mainAccount: user.mainAccount,
+      });
+      await newTransaction.save();
+
+      const mainAccount = await MainAccount.findOneAndUpdate(
+        { user: user._id },
+        {
+          $inc: { accountBalance: amount * 0.5 },
+          $push: { transactions: newTransaction },
+        },
+        { new: true }
+      ).populate("transactions");
+      const investmentAccount = await InvestmentAccount.findOneAndUpdate(
+        { user: user._id },
+        {
+          $inc: { accountBalance: amount * 0.2 },
+        },
+        { new: true }
+      );
+      console.log(investmentAccount,amount);                 
+      res.send(mainAccount);
+    }
   });
+};
 
-  const options = {
-    hostname: "api.paystack.co",
-    port: 443,
-    path: "/transaction/initialize",
-    method: "POST",
-    headers: {
-      Authorization:`Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-      "Content-Type": "application/json",
-    },
-  };
-
-  const reqpaystack = https
-    .request(options, (respaystack) => {
-      let data = "";
-
-      respaystack.on("data", (chunk) => {
-        data += chunk;
-      });
-
-      respaystack.on("end", () => {
-        res.send(data)
-        console.log(JSON.parse(data));
-      });
-    })
-    .on("error", (error) => {
-      console.error(error);
-    });
-
-  reqpaystack.write(params);
-  reqpaystack.end();
-
-}
-
-const verifyTransaction=async (req,res)=>{
-
-}
-
-export { initializeTransaction };
+export { verifyTransaction };
