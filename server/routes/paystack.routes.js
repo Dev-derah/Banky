@@ -1,9 +1,9 @@
 import express from "express";
 
-import { initializeTransaction } from "../controllers/paystack.controller.js";
+import { verifyTransaction } from "../controllers/paystack.controller.js";
 
 const router = express.Router();
 
-router.route("/").get(initializeTransaction);
+router.route("/:ref").get(verifyTransaction);
 
 export default router;

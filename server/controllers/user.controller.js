@@ -45,6 +45,7 @@ const createUser = async (req, res) => {
           accountType: "Investments",
           accountBalance: 0.0,
           dateOpened: Date.now(),
+          transactions:null
         });
         await newInvestmentAccount.save();
         newUser.investmentAccount = newInvestmentAccount._id;
@@ -60,8 +61,10 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    user = await User.findByIdAndUpdate();
-  } catch (error) {}
+    user = await User.findByIdAndUpdate({ _id: id });
+  } catch (error) {
+    res.status(500).json({message:error.message})
+  }
 };
 
 const getUserById = async (req, res) => {
@@ -85,7 +88,7 @@ const getUserById = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.deleteOne(id);
+    const user = await User.deleteOne({_id:id});
 
     res.status(200).json(user);
   } catch (error) {

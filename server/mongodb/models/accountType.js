@@ -2,8 +2,11 @@ import mongoose from "mongoose";
 
 
 const accountType = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String },
+  accountType: {
+    type: String,
+    enum: ["Savings", "Investment","Vault"],
+    default: "user",
+  },
 });
 
 const AccountType = mongoose.model("AccountType", accountType);
