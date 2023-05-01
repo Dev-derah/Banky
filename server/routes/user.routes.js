@@ -1,11 +1,13 @@
 import express from 'express';
 
-import { getAllUsers,createUser,getUserById,deleteUser,updateUser,loginUser,logout } from '../controllers/user.controller.js';
+import { getAllUsers,createUser,getUserById,deleteUser,updateUser,loginUser,logout,userProfile } from '../controllers/user.controller.js';
+import { isAuthenticated } from '../middleware/auth.js';
 
 const router = express.Router();
 
 router.route('/').get(getAllUsers);
 router.route("/logout").get(logout);
+router.route("/dashboard").get(isAuthenticated,userProfile);
 router.route('/:id').get(getUserById);
 router.route('/register').post(createUser);
 router.route("/login").post(loginUser);
