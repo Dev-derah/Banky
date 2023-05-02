@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import { Dashboard, Home, Login, PageNotFound, Register } from "./pages";
+import {CssBaseline,ThemeProvider} from '@mui/material';
+import { theme } from "./theme";
 
 function App() {
   const router = createBrowserRouter([
@@ -29,7 +31,10 @@ function App() {
 
   return (
     <main>
-      <RouterProvider router={router}></RouterProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline/>
+        <RouterProvider router={router}></RouterProvider>
+      </ThemeProvider>
     </main>
   );
 }
