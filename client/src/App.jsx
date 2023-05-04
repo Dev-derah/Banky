@@ -1,40 +1,27 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "../utils/ProtectedRoute";
 import "./App.css";
 import { Dashboard, Home, Login, PageNotFound, Register } from "./pages";
-import {CssBaseline,ThemeProvider} from '@mui/material';
-import { theme } from "./theme";
 
 function App() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-    },
-    {
-      path: "/dashboard/:id",
-      element: <Dashboard />,
-    },
-
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/register",
-      element: <Register />,
-    },
-    {
-      path: "*",
-      element: <PageNotFound/>,
-    },
-  ]);
+  const isAuthenticated = false;
 
   return (
     <main>
-      <ThemeProvider theme={theme}>
-        <CssBaseline/>
-        <RouterProvider router={router}></RouterProvider>
-      </ThemeProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
     </main>
   );
 }

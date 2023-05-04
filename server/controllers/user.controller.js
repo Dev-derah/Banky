@@ -103,7 +103,9 @@ const sendTokenResponse = async (user, statusCode, res) => {
 
 const userProfile = async(req,res,next)=>{
 try {
-  const user = await User.findById(req.user.id).select('password');
+  const user = await User.findById(req.user.id, "-password")
+    .populate("mainAccount")
+    .populate("investmentAccount");
   res.status(200).json({
     sucess: true,
     user,
