@@ -3,24 +3,21 @@ import jwt from "jsonwebtoken";
 import User from "../mongodb/models/users.js";
 
 const isAuthenticated = async (req, res, next) => {
-  const { token } = req.cookies;
-  //Check if token exixts
-  if (!token) {
-    return next(
-      new ErrorResponse("Not Unauthorized to access this route", 401)
-    );
+  const headers = req.headers.authorization || req.headers.Authorization;
+  
+  //   Check if token exixts
+  if (!headers) {
+    res.status(404).json({ message: "Token not found" });
   }
   try {
+    const token = headers.split(" ")[1];
     //verify token
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decodedToken.id);
     next();
   } catch (error) {
-    return next(
-      new ErrorResponse("Not Unauthorized to access this route", 401)
-    );
+    return next(res.status(401).json({ message: "User not authorized" }));
   }
 };
 
-
-export {isAuthenticated}
+export { isAuthenticated };

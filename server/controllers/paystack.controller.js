@@ -41,8 +41,7 @@ const verifyTransaction = async (req, res) => {
           $inc: { accountBalance: amount * 0.2 },
         },
         { new: true }
-      );
-      console.log(investmentAccount,amount);                 
+      );              
       res.send(mainAccount);
     }
   });

@@ -4,9 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { object, string } from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../redux/authSlice";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   let userSchema = object({
     email: string().email("Invalid email").required(),
     password: string().required(),
@@ -31,9 +34,9 @@ const Login = () => {
         .post("http://localhost:8080/api/v1/users/login", values, config)
         .then((response) => {
           // Handle the response
-          const data = response.data;
           actions.resetForm();
-          navigate(`/dashboard/${data.user._id}`);
+          dispatch(setCredentials(response.data));
+          navigate(`/dashboard`);
         })
         .catch((error) => {
           // Handle the error

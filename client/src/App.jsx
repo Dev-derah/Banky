@@ -1,11 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../utils/ProtectedRoute";
 import "./App.css";
+import { useSelector } from "react-redux";
 import { Dashboard, Home, Login, PageNotFound, Register } from "./pages";
 
 function App() {
-  const isAuthenticated = false;
-
+  const {token} = useSelector((state) => state.auth);
   return (
     <main>
       <Routes>
@@ -15,7 +15,7 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute isAuthenticated={token ? true : false}>
               <Dashboard />
             </ProtectedRoute>
           }
