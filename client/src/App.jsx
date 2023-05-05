@@ -1,35 +1,27 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "../utils/ProtectedRoute";
 import "./App.css";
+import { useSelector } from "react-redux";
 import { Dashboard, Home, Login, PageNotFound, Register } from "./pages";
 
 function App() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-    },
-    {
-      path: "/dashboard/:id",
-      element: <Dashboard />,
-    },
-
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/register",
-      element: <Register />,
-    },
-    {
-      path: "*",
-      element: <PageNotFound/>,
-    },
-  ]);
-
+  const {token} = useSelector((state) => state.auth);
   return (
     <main>
-      <RouterProvider router={router}></RouterProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute isAuthenticated={token ? true : false}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
     </main>
   );
 }

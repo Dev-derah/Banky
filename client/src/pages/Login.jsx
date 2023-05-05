@@ -1,43 +1,50 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
-import { Link,useNavigate } from "react-router-dom";
-import { object, string} from "yup";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { object, string } from "yup";
 import { useFormik } from "formik";
-import axios from 'axios'
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../redux/authSlice";
 
 const Login = () => {
-    const navigate = useNavigate();
-    let userSchema = object({
-      email: string().email('Invalid email').required(),
-      password: string()
-        .required(),
-    });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  let userSchema = object({
+    email: string().email("Invalid email").required(),
+    password: string().required(),
+  });
 
-    const formik = useFormik({
-      initialValues: {
-        email: "",
-        password: "",
-      },
-      validateOnBlur: false,
-      validateOnChange: false,
-      validationSchema: userSchema,
-      onSubmit: async (values, actions) => {
-        await axios
-          .post("http://localhost:8080/api/v1/users/login", values)
-          .then((response) => {
-            // Handle the response
-            const data = response.data;
-            actions.resetForm();
-            navigate(`/dashboard/${data.user._id}`);
-          })
-          .catch((error) => {
-            // Handle the error
-            alert(error.message);
-          });
-        
-      },
-    });
-    const { getFieldProps, errors } = formik;
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: userSchema,
+    onSubmit: async (values, actions) => {
+      const config = {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      };
+      await axios
+        .post("http://localhost:8080/api/v1/users/login", values, config)
+        .then((response) => {
+          // Handle the response
+          actions.resetForm();
+          dispatch(setCredentials(response.data));
+          navigate(`/dashboard`);
+        })
+        .catch((error) => {
+          // Handle the error
+          alert(error);
+        });
+    },
+  });
+  const { getFieldProps, errors } = formik;
   return (
     <div>
       <h1>Login</h1>
@@ -63,6 +70,6 @@ const Login = () => {
       </form>
     </div>
   );
-}
+};
 
-export default Login
+export default Login;

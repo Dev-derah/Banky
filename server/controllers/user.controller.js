@@ -97,13 +97,15 @@ const sendTokenResponse = async (user, statusCode, res) => {
 
   res
     .status(statusCode)
-    .cookie("token", token, { maxAge: 60 * 60 * 1000, httpOnly: true })
-    .json({ success: true, token, user });
+    .cookie("token", token, { maxAge: 3600, path: "/", httpOnly: true,sameSite:'None' })
+    .json({ success: true, token });
 };
 
 const userProfile = async(req,res,next)=>{
 try {
-  const user = await User.findById(req.user.id).select('password');
+  const user = await User.findById(req.user.id, "-password")
+    .populate("mainAccount")
+    .populate("investmentAccount");
   res.status(200).json({
     sucess: true,
     user,
