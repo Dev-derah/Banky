@@ -22,12 +22,12 @@ const createUser = async (req, res, next) => {
     const { firstName, lastName, email, phoneNumber, password } = req.body;
     const userExists = await User.findOne({ email });
     if (!firstName || !lastName || !email || !phoneNumber || !password)
-      return next(new ErrorResponse("All fields are required", 400));
+      return res.status(400).json({ message: "All fields are required" });
 
     if (userExists)
-      return next(
-        new ErrorResponse("A user with this email already exists", 400)
-      );
+      return res
+        .status(400)
+        .json({ message: "A user with this email already exists" });
 
     const newUser = await User({
       firstName,
@@ -62,7 +62,7 @@ const createUser = async (req, res, next) => {
     await newUser.save();
     res.status(201).json({ success: true, newUser });
   } catch (error) {
-    next(error);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -77,19 +77,19 @@ const loginUser = async (req, res, next) => {
         .json({ message: "Email and Password are required" });
     }
     if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ message: "Invalid email" });
     }
     const isMatch = await user.comparePassword(password, user.password);
 
     // if password is incorrect, return error
     if (!isMatch) {
-      return next(new ErrorResponse("Incorrect Password", 400));
+      return res.status(400).json({ message: "Incorrect password" });
     }
 
     // if user and password are valid, return success
     sendTokenResponse(user, 200, res);
   } catch (error) {
-    next(error);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
 const sendTokenResponse = async (user, statusCode, res) => {
@@ -97,29 +97,33 @@ const sendTokenResponse = async (user, statusCode, res) => {
 
   res
     .status(statusCode)
-    .cookie("token", token, { maxAge: 3600, path: "/", httpOnly: true,sameSite:'None' })
+    .cookie("token", token, {
+      maxAge: 3600,
+      path: "/",
+      httpOnly: true,
+      sameSite: "None",
+    })
     .json({ success: true, token });
 };
 
-const userProfile = async(req,res,next)=>{
-try {
-  const user = await User.findById(req.user.id, "-password")
-    .populate("mainAccount")
-    .populate("investmentAccount");
-  res.status(200).json({
-    sucess: true,
-    user,
-  });
-} catch (error) {
-  next(error);
-}
-}
+const userProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id, "-password")
+      .populate("mainAccount")
+      .populate("investmentAccount");
+    res.status(200).json({
+      sucess: true,
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
 
 //logout user
 const logout = (req, res, next) => {
   try {
-    res.clearCookie("token", {
-    });
+    res.clearCookie("token", {});
     return res.status(200).json({
       success: true,
       message: "Logged out",
