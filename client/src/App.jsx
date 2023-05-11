@@ -4,6 +4,7 @@ import "./App.css";
 import { useSelector } from "react-redux";
 import { Dashboard, Home, Login, PageNotFound, Register } from "./pages";
 
+
 function App() {
   const {token} = useSelector((state) => state.auth);
   return (
