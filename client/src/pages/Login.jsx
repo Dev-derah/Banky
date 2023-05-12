@@ -43,7 +43,8 @@ const Login = () => {
         .catch((error) => {
           // Handle error response
           if (error.response) {
-            toast.error(error.response.data.message);
+            const data = error.response.data;
+            toast.error(data.message);
           } else {
             toast.error("An error occurred:", error.message);
           }
@@ -57,7 +58,7 @@ const Login = () => {
       <div className=" flex flex-col  justify-center items-center h-full md:w-[30%]  md:bg-primary-50">
         <div className="text-center flex flex-col justify-center">
           <img src={bankyLogo} />
-          <h1 className="text-xl font-extrabold">Login</h1>
+          <h1 className="text-2xl font-black">Login</h1>
         </div>
         <form
           autoComplete="off"
@@ -70,32 +71,38 @@ const Login = () => {
               placeholder="example@gmail.com"
               name="email"
               id="email"
-              className="bg-formBlue  p-2 my-3 rounded-lg"
+              className={`bg-formBlue  p-2 my-1 rounded-lg ${
+                errors.email && touched.email
+                  ? "border border-red-600"
+                  : "border-none"
+              }`}
               {...getFieldProps("email")}
             />
             {errors.email && touched.email ? (
-              <div className="text-red-600 m-2">{errors.email}</div>
+              <span className="text-red-600 my-1 text-xs">{errors.email}</span>
             ) : null}
           </div>
 
           <label>Password</label>
           <input
-            className="bg-formBlue p-2 my-3 rounded-lg"
+            className={`bg-formBlue  p-2 my-1 rounded-lg ${
+              errors.password && touched.password
+                ? "border border-red-600"
+                : "border-none"
+            }`}
             placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
             name="password"
+            type="password"
             id="password"
             {...getFieldProps("password")}
           />
           {errors.password && touched.password ? (
-            <div className="text-red-600">{errors.password}</div>
+            <span className="text-red-600 text-xs">{errors.password}</span>
           ) : null}
-          <button
-            type="submit"
-            className="bg-primary-500 text-white rounded-lg px-4 py-2 mt-8"
-          >
+          <button className="bg-primary-500 text-white rounded-lg px-4 py-2 mt-8">
             Login
           </button>
-          <span className="mb-2">
+          <span className="mt-2">
             Don&#39;t have an account?{" "}
             <Link className="text-[#3A36DB]" to={"/register"}>
               Register
