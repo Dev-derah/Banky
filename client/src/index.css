@@ -13,3 +13,23 @@ font-family: 'DM Sans', sans-serif;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+.balance-card{
+  background-image: url(./assets//bgAsset.svg);
+  background-repeat: no-repeat;
+  background-position: right;
+  object-fit: contain;
+  background-size: contain;
+}
+
+.card{
+  background-image: url(./assets/cardBackground.svg);
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: cover;
+}
+
+.active{
+  background-color: hsla(0, 100%, 67%, 0.3);
+  border-left: 6px solid #FF5555;
+}
