@@ -3,10 +3,8 @@
 @tailwind utilities;
 
 :root {
-font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   line-height: 1.5;
-  font-weight: 400;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -14,7 +12,7 @@ font-family: 'DM Sans', sans-serif;
   -webkit-text-size-adjust: 100%;
 }
 
-.balance-card{
+.balance-card {
   background-image: url(./assets//bgAsset.svg);
   background-repeat: no-repeat;
   background-position: right;
@@ -22,14 +20,35 @@ font-family: 'DM Sans', sans-serif;
   background-size: contain;
 }
 
-.card{
+.card {
   background-image: url(./assets/cardBackground.svg);
   background-repeat: no-repeat;
   background-position: right;
   background-size: cover;
 }
 
-.active{
+.active {
+  position: relative;
   background-color: hsla(0, 100%, 67%, 0.3);
-  border-left: 6px solid #FF5555;
+  color: #ff5555;
+}
+
+.active::after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  background: #ff5555;
+  height: 100%;
+  width: 0.3rem;
+}
+
+
+
+.toggle-checkbox:checked {
+  right: 0;
+  border-color: #ff5555;
+}
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #ff5555;
 }

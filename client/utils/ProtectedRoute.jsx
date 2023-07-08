@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Navigate } from "react-router-dom";
 function ProtectedRoute({ isAuthenticated, children }) {
-  if (!isAuthenticated) {
+  if (isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
   return children;

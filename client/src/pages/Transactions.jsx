@@ -1,8 +1,12 @@
+import { Layout } from "../components";
+import SideBar from "../components/SideBar";
 
 const Transactions = () => {
   return (
-    <div>Transactions</div>
-  )
-}
+  <Layout>
+    <p>Transactions</p>
+  </Layout>
+  );
+};
 
-export default Transactions
+export default Transactions;
