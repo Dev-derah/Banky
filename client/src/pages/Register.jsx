@@ -153,7 +153,10 @@ const Register = () => {
           </button>
           <span className="mt-2">
             Already have an account?{" "}
-            <Link className="text-[#3A36DB]" to={"/login"}>
+            <Link
+              className=" dark:text-red-500 text-[#3A36DB]"
+              to={"/login"}
+            >
               Login
             </Link>
           </span>

@@ -1,80 +1,55 @@
-/* eslint-disable react/prop-types */
-import { bankyLogo,dashboardIcon, investmentsIcon, logoutIcon, savingsIcon, transactionsIcon } from "../assets/index";
-import axios from 'axios'
-import { useNavigate,NavLink } from "react-router-dom";
+// import axios from "axios";
+import { NavLink } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
+import { sideBarItems } from "../../utils/data";
+const SideBar = ({ showNav,setShowNav }) => {
 
-const SideBar = (props) => {
-    const navigate = useNavigate();
-      const handleLogout = async () => {
-        await axios
-          .get("http://localhost:8080/api/v1/users/logout")
-          .then(() => {
-            // Handle the response
-            navigate("/login");
-          })
-          .catch((error) => {
-            if (error.response) {
-              console.log(error.response.data.message);
-            } else {
-              console.log("An error occurred:", error.message);
-            }
-          });
-      };
   return (
-    <div className="flex">
-      <div className=" flex flex-col justify-between w-[10vw] md:w-[20%]">
-        <div className="h-full">
-          <div className="m-8 flex items-center">
-            <img src={bankyLogo} />
-            <p className="text-2xl">Banky</p>
-          </div>
-          <ul className="flex flex-col mt-10">
-            <NavLink to="/dashboard" activestyle="active" className="p-1 flex md:p-4">
-              <span>
-                <img src={dashboardIcon} className="w-6 mr-4" />
-              </span>
-              <p className="hidden md:block">Dashboard</p>
-            </NavLink>
-            <NavLink
-              to="/transactions"
-              activestyle="active"
-              className="p-4 flex"
-            >
-              <span>
-                <img src={transactionsIcon} className="w-6 mr-4" />
-              </span>
-              <p className="hidden md:block">Transactions</p>
-            </NavLink>
-            <NavLink to="/savings" activestyle="active" className="p-4 flex">
-              <span>
-                <img src={savingsIcon} className="w-6 mr-4" />
-              </span>
-              <p className="hidden md:block">Savings</p>
-            </NavLink>
-            <NavLink
-              to="/investments"
-              activestyle="active"
-              className="p-4 flex"
-            >
-              <span>
-                <img src={investmentsIcon} className="w-6 mr-4" />
-              </span>
-              <p className="hidden md:block">Investments</p>
-            </NavLink>
-          </ul>
-        </div>
-        <div className="border-t-2 py-4 px-2">
-          <button onClick={handleLogout} className="flex items-center gap-3">
+    <nav
+      className={`w-1/2 fixed h-screen mt-16 md:w-56 dark:bg-gray-800 dark:text-gray-400 transition-all duration-[400ms] z-20 ${
+        !showNav ? "-left-full" : "left-0"
+      }`}
+    >
+      <div>
+        <ul className="flex flex-col mt-4">
+          {sideBarItems.map((item, index) => (
+            <li key={index}>
+              <NavLink
+                to={item.path}
+                activestyle="active"
+                className="sidebar-item p-2 my-2 flex hover:text-primary-500 transition-colors duration-200 ease-in-out md:p-4"
+              >
+                <FontAwesomeIcon
+                  icon={item.icon}
+                  className="xs:mr-2 xs:w-4 w-6 mr-4 text-red-150 hover:text-primary-500"
+                />
+
+                <p className="xs:text-sm">{item.label}</p>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+        <div className="border-t-2 py-4 px-2 fixed w-1/2 bottom-0 md:w-56">
+          <button
+            className="flex items-center gap-3 w-full"
+            aria-label="Logout"
+          >
             <span>
-              <img src={logoutIcon} />
+              <FontAwesomeIcon
+                className="sidebar-icon"
+                icon={faRightFromBracket}
+                onClick={() => setShowNav(!showNav)}
+              />
             </span>
-            <span className="hidden md:block">Logout</span>
+            <span>Logout</span>
           </button>
         </div>
       </div>
-      <div className="w-[90vw] md:w-[80%]">{props.children}</div>
-    </div>
+    </nav>
   );
-}
+};
 
 export default SideBar
