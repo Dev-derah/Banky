@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { formatCurrency, transactionsData } from "../../utils/data";
 import { noTransactions } from "../assets";
+import { formatCurrency } from "../../utils/data";
 
-const TransactionsTable = () => {
+const TransactionsTable = ({transactionsData}) => {
   const navigate = useNavigate();
 
   return (
@@ -42,8 +42,8 @@ const TransactionsTable = () => {
                   <td
                     className={`px-6 py-4 ${
                       type === "Debit"
-                        ? "text-red-500 dark:text-red-700"
-                        : "text-green-500 dark:text-green-700"
+                        ? "text-red-500"
+                        : "text-green-500"
                     }`}
                   >
                     {formatCurrency(amount)}

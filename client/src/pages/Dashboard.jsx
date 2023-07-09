@@ -203,7 +203,7 @@ import {
   faRightLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { formatCurrency } from "../../utils/data";
+import { formatCurrency, transactionsData } from "../../utils/data";
 
 const Dashboard = () => {
   const number = 500000000000;
@@ -291,7 +291,7 @@ const Dashboard = () => {
             <SummaryCard icon={clockIcon} title="Payments" amount={3000} />
           </div>
 
-          <TransactionsTable />
+          <TransactionsTable transactionsData={transactionsData}/>
         </div>
         <div className="cols-1">
           <DebitCard />

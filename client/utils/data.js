@@ -43,7 +43,7 @@ export const transactionsData = [
     id: "3",
     name: "Trf/Jane Doe/transaction Description",
     type: "Credit",
-    amount: 600000,
+    amount: 60000000,
     date: new Date(),
   },
 ];
