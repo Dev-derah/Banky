@@ -11,6 +11,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+body{
+  min-height: 100%;
+}
 
 .balance-card {
   background-image: url(./assets//bgAsset.svg);

@@ -5,8 +5,9 @@ import DebitCard from "./DebitCard";
 import TransactionsTable from "./TransactionsTable";
 import Modal from "./Modal";
 import HamburgerMenu from "./HamburgerMenu";
-import Layout from "./Layout";
+DashboardLayout
 import TopBar from "./TopBar";
+import DashboardLayout from "./layouts/DashboardLayout";
 
 export {
   Footer,
@@ -16,6 +17,6 @@ export {
   TransactionsTable,
   Modal,
   HamburgerMenu,
-  Layout,
+  DashboardLayout,
   TopBar,
 };

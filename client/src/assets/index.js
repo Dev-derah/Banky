@@ -13,6 +13,7 @@ import savingsIcon from "./savings.svg";
 import investmentsIcon from "./investments.svg";
 import logoutIcon from "./logout.svg";
 import cardLogo from "./cardLogo.svg";
+import noTransactions from "./noTransactions.svg";
 
 export {
     loginImage,
@@ -29,5 +30,6 @@ export {
     cardBackground,
     dashboardIcon,
     transactionsIcon,
-    savingsIcon
+    savingsIcon,
+    noTransactions
 };

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import SideBar from "./SideBar";
-import TopBar from "./TopBar";
+import SideBar from "../SideBar";
+import TopBar from "../TopBar";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Layout = ({ children }) => {
+const DashboardLayout = ({ children }) => {
   const [showNav, setShowNav] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -47,10 +47,10 @@ const Layout = ({ children }) => {
           />
         )}
 
-        <div className="px-4 md:px-16 md:h-screen">{children}</div>
+        <div className="px-4 md:px-16 md:min-h-screen">{children}</div>
       </main>
     </>
   );
 };
 
-export default Layout;
+export default DashboardLayout;

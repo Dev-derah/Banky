@@ -1,11 +1,10 @@
-import { Layout } from "../components";
-import SideBar from "../components/SideBar";
+import { DashboardLayout } from "../components";
 
 const Transactions = () => {
   return (
-  <Layout>
+  <DashboardLayout>
     <p>Transactions</p>
-  </Layout>
+  </DashboardLayout>
   );
 };
 
