@@ -9,7 +9,7 @@ const SideBar = ({ showNav,setShowNav }) => {
 
   return (
     <nav
-      className={`w-1/2 fixed h-screen mt-16 md:w-56 dark:bg-gray-800 dark:text-gray-400 transition-all duration-[400ms] z-20 ${
+      className={`w-1/2 fixed min-h-screen mt-16 md:w-56 dark:bg-gray-800 dark:text-gray-400 transition-all duration-[400ms] z-20 ${
         !showNav ? "-left-full" : "left-0"
       }`}
     >

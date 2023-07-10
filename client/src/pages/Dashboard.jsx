@@ -187,7 +187,6 @@
 
 // export default Dashboard;
 
-import Layout from "../components/Layout";
 import SummaryCard from "../components/SummaryCard";
 import {
   calculatorIcon,
@@ -196,7 +195,7 @@ import {
   transferIcon,
   walletIcon,
 } from "../assets/index";
-import { DebitCard, Modal, TransactionsTable } from "../components";
+import { DashboardLayout, DebitCard, Modal, TransactionsTable } from "../components";
 import { useState } from "react";
 import {
   faChevronRight,
@@ -204,6 +203,7 @@ import {
   faRightLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { formatCurrency, transactionsData } from "../../utils/data";
 
 const Dashboard = () => {
   const number = 500000000000;
@@ -217,7 +217,7 @@ const Dashboard = () => {
     setShowModal(false);
   };
   return (
-    <Layout>
+    <DashboardLayout>
       <Modal isOpen={showModal} onClose={handleCloseModal}>
         <div className="mt-3 flex w-full">
           <div className="mt-2 text-center sm:text-left w-full">
@@ -232,7 +232,6 @@ const Dashboard = () => {
               <FontAwesomeIcon icon={faChevronRight} />
             </div>
             <div className="p-4 shadow-md mb-6 bg-gray-200 dark:bg-gray-800 flex justify-between items-center cursor-pointer">
-              {" "}
               <span>
                 <FontAwesomeIcon icon={faBuildingColumns} className="mr-4" />
                 Transfer to Other Banks
@@ -254,7 +253,7 @@ const Dashboard = () => {
         <div className="h-full w-[70%] flex flex-col justify-center ">
           <p className="text-xs md:text-base">Main Account Balance</p>
           <p className="w-full text-xl font-extrabold font-sans md:text3xl">
-            ₦ {number.toLocaleString()}
+           {formatCurrency(number)}
           </p>
         </div>
 
@@ -292,7 +291,7 @@ const Dashboard = () => {
             <SummaryCard icon={clockIcon} title="Payments" amount={3000} />
           </div>
 
-          <TransactionsTable />
+          <TransactionsTable transactionsData={transactionsData}/>
         </div>
         <div className="cols-1">
           <DebitCard />
@@ -303,7 +302,7 @@ const Dashboard = () => {
                   Top Transactions
                 </h3>
                 <li className="flex justify-between py-5 border-b-2">
-                  Waverley Gomby <span className="text-credit">1000</span>
+                  Waverley Gomby <span className="text-credit">{formatCurrency(200)}</span>
                 </li>
                 <li className="flex justify-between py-5 border-b-2">
                   Waverley Gomby <span className="text-debit">1000</span>
@@ -316,7 +315,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </DashboardLayout>
   );
 };
 

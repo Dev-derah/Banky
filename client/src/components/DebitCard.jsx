@@ -42,7 +42,7 @@ const DebitCard = ({ firstName, lastName }) => {
   };
   return (
     <div className="w-full">
-      <div className="card w-full h-52 bg-[#222831] rounded-2xl relative text-secondary max-w-[350px]">
+      <div className="card w-full h-52 bg-[#222831] rounded-2xl relative text-secondary lg:max-w-[350px]">
         <div className="card-top absolute right-6 top-6 text-sm">
           <p>Debit</p>
         </div>

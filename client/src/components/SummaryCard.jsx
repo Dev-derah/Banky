@@ -1,3 +1,4 @@
+import { formatCurrency } from "../../utils/data";
 const SummaryCard = ({ icon, title, amount }) => {
   return (
     <div className="flex w-full h-20 gap-x-4 bg-white border border-[#DADADA] px-2 py-4 mb-4 rounded-md md:w-[33.3%] md:gap-x-2 dark:bg-gray-800 dark:text-gray-200">
@@ -10,7 +11,7 @@ const SummaryCard = ({ icon, title, amount }) => {
           className="font-bold font-sans text-md md:text-lg"
           style={{ fontSize: "calc(30% + 0.8rem)" }}
         >
-          ₦{amount}
+          {formatCurrency(amount)}
         </h3>
       </div>
     </div>
