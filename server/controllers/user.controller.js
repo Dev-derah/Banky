@@ -1,10 +1,10 @@
-import { model } from "mongoose";
+import mongoose, { model } from "mongoose";
 import User from "../mongodb/models/users.js";
 import MainAccount from "../mongodb/models/mainAccount.js";
 import InvestmentAccount from "../mongodb/models/investmentAccount.js";
 import createAccountNumber from "../utils/createAccountNumber.js";
 import jwt from "jsonwebtoken";
-import { ErrorResponse } from "../utils/errorResponse.js";
+import AccountType from "../mongodb/models/accountType.js";
 
 const getAllUsers = async (req, res) => {
   try {
@@ -18,25 +18,49 @@ const getAllUsers = async (req, res) => {
 };
 
 const createUser = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
-    const { firstName, lastName, email, phoneNumber, password } = req.body;
-    const userExists = await User.findOne({ email });
-    if (!firstName || !lastName || !email || !phoneNumber || !password)
-      return res.status(400).json({ message: "All fields are required" });
+    const { firstName, lastName, email, phoneNumber, password, accountType } =
+      req.body;
 
-    if (userExists)
+    const selectedAccountType = await AccountType.findOne({
+      Name: accountType,
+    });
+
+    const userExists = await User.findOne({ email });
+
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !phoneNumber ||
+      !password ||
+      !accountType
+    ) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (userExists) {
       return res
         .status(400)
         .json({ message: "A user with this email already exists" });
+    }
 
-    const newUser = await User({
+    if (!selectedAccountType) {
+      return res.status(404).json({ error: "Account type not found" });
+    }
+
+    const newUser = new User({
       firstName,
       lastName,
       phoneNumber,
       password,
       email,
+      accountType: selectedAccountType._id,
     });
 
+    // Create spend, invest, and save accounts for the user based on the selected account type
     const newMainAccount = new MainAccount({
       user: newUser._id,
       accountNumber: createAccountNumber(22),
@@ -44,8 +68,6 @@ const createUser = async (req, res, next) => {
       accountBalance: 0.0,
       dateOpened: Date.now(),
     });
-
-    await newMainAccount.save();
     newUser.mainAccount = newMainAccount._id;
 
     const newInvestmentAccount = new InvestmentAccount({
@@ -55,12 +77,18 @@ const createUser = async (req, res, next) => {
       dateOpened: Date.now(),
       transactions: null,
     });
-    await newInvestmentAccount.save();
-    newUser.investmentAccount = newInvestmentAccount._id;
 
-    // Save user to MongoDB
-    await newUser.save();
-    res.status(201).json({ success: true, newUser });
+    newUser.investmentAccount = newInvestmentAccount._id;
+    await Promise.all([
+      newMainAccount.save(),
+      newInvestmentAccount.save(),
+      // ... other account saves ...
+    ]);
+     const savedUser = await newUser.save();
+    await session.commitTransaction();
+    session.endSession();
+    // Return only necessary information, like the user's ID
+    res.status(201).json({ success: true, userId: savedUser._id });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong" });
   }

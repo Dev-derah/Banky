@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const TransactionsSchema = new mongoose.Schema(
   {
-    date: { type: String, required: true },
-    transactionType: { type: String, required: true },
-    transactionAmount: { type: Number, required: true },
-    mainAccount: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "MainAccount",
+    date: { type: Date, default: Date.now },
+    transactionType: {
+      type: String,
+      enum: ["deposit", "withdrawal"],
+      required: true,
     },
+    transactionAmount: { type: Number, required: true },
   },
   {
     timestamps: true,

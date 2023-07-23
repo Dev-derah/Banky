@@ -2,15 +2,34 @@ import { model } from "mongoose";
 import AccountType from "../mongodb/models/accountType.js";
 
 const createAccountType = async (req, res) => {
-  const { name, description } = req.body;
   try {
-    const accountType = new AccountType({ name, description });
-    await accountType.save();
-    res.status(201).json(accountType);
+    const { name, spend, invest, save, description,isRecommended } = req.body;
+
+    if (!name || !spend || !invest || !save || !description) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Create a new account type
+    const newAccountType = await new AccountType({
+      Name: name,
+      Spend: spend,
+      Invest: invest,
+      Save: save,
+      Description: description,
+      isRecommended: isRecommended || false,
+    });
+
+    // Save the new account type to the database
+    const savedAccountType = await newAccountType.save();
+    console.log()
+    
+    res.status(201).json({ success: true, accountType: savedAccountType });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: "Failed to create account type" });
   }
 };
+
+
 
 const getAccountType = async (req, res) => {
         try {
