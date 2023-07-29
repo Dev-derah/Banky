@@ -60,39 +60,51 @@ const createUser = async (req, res, next) => {
       accountType: selectedAccountType._id,
     });
 
-    // Create spend, invest, and save accounts for the user based on the selected account type
+    // Create the main account for the user
     const newMainAccount = new MainAccount({
       user: newUser._id,
       accountNumber: createAccountNumber(22),
-      accountType: "Savings",
+      accountType: accountType,
       accountBalance: 0.0,
       dateOpened: Date.now(),
     });
+
     newUser.mainAccount = newMainAccount._id;
 
+    // Generate a card for the main account
+    await newMainAccount.generateCardDetails();
+
+    // Create the investment account for the user
     const newInvestmentAccount = new InvestmentAccount({
       user: newUser._id,
-      accountType: "Investments",
+      accountType: accountType,
       accountBalance: 0.0,
       dateOpened: Date.now(),
-      transactions: null,
     });
-
     newUser.investmentAccount = newInvestmentAccount._id;
+
+    // Save the user and accounts
     await Promise.all([
+      newUser.save(),
       newMainAccount.save(),
       newInvestmentAccount.save(),
-      // ... other account saves ...
     ]);
-     const savedUser = await newUser.save();
+
     await session.commitTransaction();
     session.endSession();
+
     // Return only necessary information, like the user's ID
-    res.status(201).json({ success: true, userId: savedUser._id });
+    res.status(201).json({ success: true, userId: newUser._id });
   } catch (error) {
+    console.error(error); // Log the error for debugging purposes
+
+    await session.abortTransaction();
+    session.endSession();
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+
 
 // LOGIN Authenticated user
 const loginUser = async (req, res, next) => {
@@ -126,19 +138,18 @@ const sendTokenResponse = async (user, statusCode, res) => {
   res
     .status(statusCode)
     .cookie("token", token, {
-      maxAge: 3600,
       path: "/",
       httpOnly: true,
       sameSite: "None",
     })
-    .json({ success: true, token });
+    .json({ success: true,});
 };
 
-const userProfile = async (req, res, next) => {
+const userDashboard = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id, "-password")
-      .populate("mainAccount")
-      .populate("investmentAccount");
+      .populate({ path: "mainAccount", select: "-__v" })
+      .populate({ path: "investmentAccount", select: "-__v" });
     res.status(200).json({
       sucess: true,
       user,
@@ -207,5 +218,5 @@ export {
   deleteUser,
   loginUser,
   logout,
-  userProfile,
+  userDashboard,
 };

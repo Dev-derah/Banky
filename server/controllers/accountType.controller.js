@@ -21,7 +21,6 @@ const createAccountType = async (req, res) => {
 
     // Save the new account type to the database
     const savedAccountType = await newAccountType.save();
-    console.log()
     
     res.status(201).json({ success: true, accountType: savedAccountType });
   } catch (error) {
