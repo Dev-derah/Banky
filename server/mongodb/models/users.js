@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "MainAccount",
   },
+  
   investmentAccount: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "InvestmentAccount",
@@ -33,7 +34,7 @@ UserSchema.methods.comparePassword = async function(enteredPassword){
 
 UserSchema.methods.getJwtToken = function () {
   return jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
-    expiresIn: 3600,
+    expiresIn: 7 * 24 * 60 * 60,
   });
 }; 
 

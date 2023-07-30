@@ -9,6 +9,7 @@ const createAccount = async (req, res) => {
     let accountNumber = createAccountNumber(22);
     const accountNumberExists = await MainAccount.findOne({ accountNumber });
     const userExists = await User.findOne({ id: user });
+    
     if (accountNumberExists) {
       accountNumber = createAccountNumber(22);
     }

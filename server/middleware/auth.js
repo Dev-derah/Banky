@@ -3,14 +3,14 @@ import jwt from "jsonwebtoken";
 import User from "../mongodb/models/users.js";
 
 const isAuthenticated = async (req, res, next) => {
-  const headers = req.headers.authorization || req.headers.Authorization;
-  
+  const cookies = req.headers.cookie || req.headers.Cookie;
+
   //   Check if token exixts
-  if (!headers) {
+  if (!cookies) {
     res.status(404).json({ message: "Token not found" });
   }
   try {
-    const token = headers.split(" ")[1];
+    const token = cookies.split("=")[1];
     //verify token
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decodedToken.id);
