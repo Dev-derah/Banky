@@ -21,8 +21,12 @@ const createUser = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const { firstName, lastName, email, phoneNumber, password, accountType } =
+    let { firstName, lastName, email, phoneNumber, password, accountType } =
       req.body;
+    // Convert email, firstName, and lastName to lowercase
+    email = email.toLowerCase();
+    firstName = firstName.toLowerCase();
+    lastName = lastName.toLowerCase();
 
     const selectedAccountType = await AccountType.findOne({
       Name: accountType,
@@ -60,6 +64,9 @@ const createUser = async (req, res, next) => {
       accountType: selectedAccountType._id,
     });
 
+    // Save the new user to the database first
+    await newUser.save();
+
     // Create the main account for the user
     const newMainAccount = new MainAccount({
       user: newUser._id,
@@ -83,12 +90,8 @@ const createUser = async (req, res, next) => {
     });
     newUser.investmentAccount = newInvestmentAccount._id;
 
-    // Save the user and accounts
-    await Promise.all([
-      newUser.save(),
-      newMainAccount.save(),
-      newInvestmentAccount.save(),
-    ]);
+    // Save the main account and investment account to the database
+    await Promise.all([newMainAccount.save(), newInvestmentAccount.save()]);
 
     await session.commitTransaction();
     session.endSession();
@@ -103,6 +106,7 @@ const createUser = async (req, res, next) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
+
 
 
 
