@@ -9,7 +9,7 @@ const createAccount = async (req, res) => {
     let accountNumber = createAccountNumber(22);
     const accountNumberExists = await MainAccount.findOne({ accountNumber });
     const userExists = await User.findOne({ id: user });
-    
+
     if (accountNumberExists) {
       accountNumber = createAccountNumber(22);
     }
@@ -34,13 +34,32 @@ const getAllAccounts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-const getAccountDetails = async (req, res) => {};
+const getAccountDetails = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const mainAccount = await MainAccount.findOne({ user: id });
+
+    if (!mainAccount) {
+      return res.status(404).json({ message: "Main account not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      mainAccount,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const userDashboard = async (req, res, next) => {};
+
 const updateAccountDetails = async (req, res) => {
   const { id } = req.params;
   const { amount } = req.query;
   const Useraccount = await MainAccount.findOneAndUpdate(
     { user: id },
-    { $inc: { accountBalance: amount/100 } },
+    { $inc: { accountBalance: amount / 100 } },
     { new: true }
   );
   try {

@@ -205,7 +205,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { formatCurrency, transactionsData } from "../../utils/data";
 
-const Dashboard = () => {
+const MainAccountDashboard = () => {
   const number = 500000000000;
   const [showModal, setShowModal] = useState(false);
 
@@ -253,7 +253,7 @@ const Dashboard = () => {
         <div className="h-full w-[70%] flex flex-col justify-center ">
           <p className="text-xs md:text-base">Main Account Balance</p>
           <p className="w-full text-xl font-extrabold font-sans md:text3xl">
-           {formatCurrency(number)}
+            {formatCurrency(number)}
           </p>
         </div>
 
@@ -291,7 +291,7 @@ const Dashboard = () => {
             <SummaryCard icon={clockIcon} title="Payments" amount={3000} />
           </div>
 
-          <TransactionsTable transactionsData={transactionsData}/>
+          <TransactionsTable transactionsData={transactionsData} />
         </div>
         <div className="cols-1">
           <DebitCard />
@@ -302,7 +302,8 @@ const Dashboard = () => {
                   Top Transactions
                 </h3>
                 <li className="flex justify-between py-5 border-b-2">
-                  Waverley Gomby <span className="text-credit">{formatCurrency(200)}</span>
+                  Waverley Gomby{" "}
+                  <span className="text-credit">{formatCurrency(200)}</span>
                 </li>
                 <li className="flex justify-between py-5 border-b-2">
                   Waverley Gomby <span className="text-debit">1000</span>
@@ -319,4 +320,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default MainAccountDashboard;

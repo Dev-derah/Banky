@@ -1,18 +1,21 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { object, string } from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../redux/authSlice";
+import { userLoggedIn } from "../redux/authSlice";
 import { loginImage } from "../assets/index";
 import { toast } from "react-toastify";
 import AuthLayout from "../components/layouts/AuthLayout";
+import useLoading from "../hooks/useLoading";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { isLoading, startLoading, stopLoading } = useLoading();
+
   let userSchema = object({
     email: string().email("Invalid email").required(),
     password: string().required(),
@@ -27,6 +30,7 @@ const Login = () => {
     validateOnChange: true,
     validationSchema: userSchema,
     onSubmit: async (values, actions) => {
+       startLoading();
       const config = {
         headers: {
           Accept: "application/json",
@@ -38,8 +42,8 @@ const Login = () => {
         .then((response) => {
           toast.success("Login Successful");
           actions.resetForm();
-          dispatch(setCredentials(response.data));
-          navigate(`/dashboard`);
+          dispatch(userLoggedIn(response.data));
+          navigate(`/main-account`);
         })
         .catch((error) => {
           // Handle error response
@@ -50,6 +54,7 @@ const Login = () => {
             toast.error("An error occurred:", error.message);
           }
         });
+
     },
   });
   const { getFieldProps, errors, touched } = formik;
@@ -154,7 +159,10 @@ const Login = () => {
         {errors.password && touched.password ? (
           <span className="text-red-600 text-xs">{errors.password}</span>
         ) : null}
-        <button className="bg-primary-500 text-white rounded-lg px-4 py-2 mt-8">
+        <button
+          className="bg-primary-500 text-white rounded-lg px-4 py-2 mt-8"
+          disabled={isLoading}
+        >
           Login
         </button>
         <span className="mt-2">
