@@ -14,14 +14,15 @@ import {
   updateInvestmentAccountDetails,
   createInvestmentAccount
 } from '../controllers/investmentAccount.controller.js'
+import { isAuthenticated } from '../middleware/auth.js';
 
 const router = express.Router();
 //Main Account
-router.route("/").post(createAccount);
-router.route("/").get(getAllAccounts);
-router.route("/:id").get(getAccountDetails);
-router.route("/:id").patch(updateAccountDetails);
-router.route("/:id").delete(deleteAccountDetails);
+router.route("/main-account").post(createAccount);
+router.route("/main-account").get(getAllAccounts);
+router.route("/main-account/:id").get(isAuthenticated,getAccountDetails);
+router.route("/main-account/:id").patch(updateAccountDetails);
+router.route("/main-account/:id").delete(deleteAccountDetails);
 
 
 //Vault Account
@@ -32,7 +33,7 @@ router.route('/investment-account').post(createInvestmentAccount);
 router.route("/investment-account").get(getAllInvestmentAccounts)
 router.route("/investment-account/:id").get(getInvestmentAccountDetails);
 router.route("/investment-account/:id").get(getInvestmentAccountDetails);
-router.route("/:id").patch(updateInvestmentAccountDetails);
-router.route("/:id").delete(deleteInvestmentAccountDetails);
+router.route("/investment-account/:id").patch(updateInvestmentAccountDetails);
+router.route("/investment-account/:id").delete(deleteInvestmentAccountDetails);
 
 export default router;

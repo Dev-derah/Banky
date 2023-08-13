@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 import { Navigate } from "react-router-dom";
-function ProtectedRoute({ isAuthenticated, children }) {
-  if (isAuthenticated) {
+import { useSelector } from 'react-redux';
+function ProtectedRoute({ children }) {
+  const token = useSelector((state) => state.auth.token);
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
   return children;

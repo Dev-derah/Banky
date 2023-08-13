@@ -1,13 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-import ProtectedRoute from "../utils/ProtectedRoute";
 import "./App.css";
 import { useSelector } from "react-redux";
-import { Dashboard, Home, Login, PageNotFound, Register, Transactions } from "./pages";
+import {  Home, Login, MainAccountDashboard, PageNotFound, Register, Transactions } from "./pages";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 
 function App() {
-  const {token} = useSelector((state) => state.auth);
   return (
     <main className=" dark:bg-gray-700 dark:text-gray-400">
       <Routes>
@@ -15,17 +14,17 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
-          path="/dashboard"
+          path="/main-account"
           element={
-            <ProtectedRoute isAuthenticated={token ? true : false}>
-              <Dashboard />
+            <ProtectedRoute>
+              <MainAccountDashboard/>
             </ProtectedRoute>
           }
         />
         <Route
           path="/transactions"
           element={
-            <ProtectedRoute isAuthenticated={token ? true : false}>
+            <ProtectedRoute >
               <Transactions />
             </ProtectedRoute>
           }

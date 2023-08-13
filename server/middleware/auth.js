@@ -7,7 +7,7 @@ const isAuthenticated = async (req, res, next) => {
 
   //   Check if token exixts
   if (!cookies) {
-    res.status(404).json({ message: "Token not found" });
+    return res.status(404).json({ message: "Token not found" });
   }
   try {
     const token = cookies.split("=")[1];

@@ -74,6 +74,7 @@ const createUser = async (req, res, next) => {
       accountType: accountType,
       accountBalance: 0.0,
       dateOpened: Date.now(),
+      accountPercentage: selectedAccountType.Spend,
     });
 
     newUser.mainAccount = newMainAccount._id;
@@ -87,6 +88,7 @@ const createUser = async (req, res, next) => {
       accountType: accountType,
       accountBalance: 0.0,
       dateOpened: Date.now(),
+      accountPercentage: selectedAccountType.Invest,
     });
     newUser.investmentAccount = newInvestmentAccount._id;
 
@@ -149,19 +151,6 @@ const sendTokenResponse = async (user, statusCode, res) => {
     .json({ success: true,});
 };
 
-const userDashboard = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id, "-password")
-      .populate({ path: "mainAccount", select: "-__v" })
-      .populate({ path: "investmentAccount", select: "-__v" });
-    res.status(200).json({
-      sucess: true,
-      user,
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" });
-  }
-};
 
 //logout user
 const logout = (req, res, next) => {
@@ -222,5 +211,4 @@ export {
   deleteUser,
   loginUser,
   logout,
-  userDashboard,
 };
