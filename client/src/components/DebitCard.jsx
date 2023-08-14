@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { cardLogo } from "../assets";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-const DebitCard = ({ firstName, lastName }) => {
+const DebitCard = ({ cardHolderName, accountNumber, expiry, cvv }) => {
   const [showDetails, setShowDetails] = useState(false); // State for toggle
 
   const handleToggle = () => {
@@ -11,7 +11,7 @@ const DebitCard = ({ firstName, lastName }) => {
   const buttonLabel = showDetails ? "Hide Card Details" : "Show Card Details";
   const renderCardNumber = () => {
     if (showDetails) {
-      return "1234 5678 9012 3456"; // Show actual card number
+      return accountNumber; // Show actual card number
     } else {
       return "#### #### #### ####"; // Show masked card number
     }
@@ -19,7 +19,7 @@ const DebitCard = ({ firstName, lastName }) => {
 
   const renderCardHolder = () => {
     if (showDetails) {
-      return `${firstName} ${lastName}`; // Show actual card holder name
+      return cardHolderName; // Show actual card holder name
     } else {
       return "*********"; // Show masked card holder name
     }
@@ -27,7 +27,7 @@ const DebitCard = ({ firstName, lastName }) => {
 
   const renderCardExpiry = () => {
     if (showDetails) {
-      return "12/24"; // Show actual card expiry
+      return expiry; // Show actual card expiry
     } else {
       return "**/**"; // Show masked card expiry
     }
@@ -35,7 +35,7 @@ const DebitCard = ({ firstName, lastName }) => {
 
   const renderCardCVV = () => {
     if (showDetails) {
-      return "123"; // Show actual CVV
+      return cvv; // Show actual CVV
     } else {
       return "***"; // Show masked CVV
     }
@@ -66,7 +66,7 @@ const DebitCard = ({ firstName, lastName }) => {
             <span className="text-xs">CVV</span>
             <p>{renderCardCVV()}</p>
           </div>
-          <img src={cardLogo} alt="mastercard-logo"/>
+          <img src={cardLogo} alt="mastercard-logo" />
         </div>
       </div>
       <div className="mt-4">

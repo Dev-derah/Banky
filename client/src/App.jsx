@@ -1,10 +1,14 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import { useSelector } from "react-redux";
-import {  Home, Login, MainAccountDashboard, PageNotFound, Register, Transactions } from "./pages";
+import {
+  Home,
+  Login,
+  MainAccountDashboard,
+  PageNotFound,
+  Register,
+  Transactions,
+} from "./pages";
 import ProtectedRoute from "./components/ProtectedRoute";
-
-
 
 function App() {
   return (
@@ -14,21 +18,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
-          path="/main-account"
-          element={
-            <ProtectedRoute>
-              <MainAccountDashboard/>
-            </ProtectedRoute>
-          }
+          path="/main-account/:userId"
+          element={<MainAccountDashboard />}
         />
-        <Route
-          path="/transactions"
-          element={
-            <ProtectedRoute >
-              <Transactions />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/transactions" element={<Transactions />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </main>

@@ -146,9 +146,9 @@ const sendTokenResponse = async (user, statusCode, res) => {
     .cookie("token", token, {
       path: "/",
       httpOnly: true,
-      sameSite: "None",
+      //sameSite: "None",
     })
-    .json({ success: true,});
+    .json({ success: true, userId: user._id});
 };
 
 
